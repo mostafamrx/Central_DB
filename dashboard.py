@@ -63,16 +63,18 @@ st.markdown("""
 st.title("📊 لوحة تحكم قاعدة بيانات العملاء المركزية")
 st.markdown("---")
 
-# 3. دالة جلب البيانات من PostgreSQL
+# 3. دالة جلب البيانات من PostgreSQL السحابية
 @st.cache_data(ttl=60)
 def load_data():
     try:
-        engine = create_engine('postgresql+psycopg2://admin:adminpassword@localhost:5432/crm_database')
+        # استبدل هذا الرابط بالرابط السحابي الخاص بك من Neon بالكامل
+        CLOUD_DB_URL = "postgresql://neondb_owner:npg_sSlIUkKJ6F5B@ep-purple-butterfly-alnfe94v.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+        engine = create_engine(CLOUD_DB_URL)
         query = "SELECT * FROM potential_customers ORDER BY created_at DESC;"
         df = pd.read_sql(query, engine)
         return df
     except Exception as e:
-        st.error(f"❌ خطأ في الاتصال بقاعدة البيانات: {e}")
+        st.error(f"❌ خطأ في الاتصال بقاعدة البيانات السحابية: {e}")
         return pd.DataFrame()
 
 df = load_data()
